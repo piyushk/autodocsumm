@@ -31,6 +31,31 @@ class TestAutosummaryDocumenter(unittest.TestCase):
     def test_module(self, app, status, warning):
         app.build()
         html = get_html(app, 'test_module.html')
+        print(html)
+        self.assertIn('<span class="pre">TestClass</span>', html)
+        self.assertIn('<span class="pre">test_func</span>', html)
+        self.assertIn('<span class="pre">test_method</span>', html)
+        self.assertIn('<span class="pre">test_attr</span>', html)
+
+        # test whether the right objects are included
+        self.assertIn('<span class="pre">class_caller</span>', html)
+        self.assertIn('Caller docstring for class attribute', html)
+
+        # test whether the data is shown correctly
+        self.assertIn('<span class="pre">large_data</span>', html)
+        self.assertIn('<span class="pre">small_data</span>', html)
+
+        self.assertNotIn('Should be skipped', html)
+        self.assertIn('Should be included', html)
+
+        self.assertNotIn('Should also be skipped', html)
+        self.assertIn('Should also be included', html)
+
+    @with_app(buildername='html', srcdir=sphinx_supp,
+              copy_srcdir_to_tmpdir=True)
+    def test_module_no_nesting(self, app, status, warning):
+        app.build()
+        html = get_html(app, 'test_module_no_nesting.html')
         self.assertIn('<span class="pre">TestClass</span>', html)
         self.assertIn('<span class="pre">test_func</span>', html)
         self.assertIn('<span class="pre">test_method</span>', html)
