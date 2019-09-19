@@ -454,7 +454,6 @@ class AutoSummDirective(AutodocDirective, Autosummary):
         options_save = self.options.copy()
         doc_nodes = AutodocDirective.run(self)
         self.options.update(options_save)
-        print(self.options)
         if 'autosummary' not in self.options:
             return doc_nodes
         try:
@@ -464,10 +463,9 @@ class AutoSummDirective(AutodocDirective, Autosummary):
         if sphinx_version < [2, 0]:
             self.warnings = []
             self.result = ViewList()
-        print(self.options)
-        nested = 'autosummary-no-nesting' not in self.options
         documenter = self.autosummary_documenter
         grouped_documenters = documenter.get_grouped_documenters()
+        nested = 'autosummary-no-nesting' not in self.options
         summ_nodes = self.autosumm_nodes(documenter, grouped_documenters, nested)
 
         dn = summ_nodes.pop(documenter.fullname)
